@@ -33,14 +33,7 @@ func main() {
 
 	fmt.Println("Ready for commands!")
 
-	go func () {
-		for {
-			messageBuffer := make([]byte, 128)
-			conn.ReadFromUDP(messageBuffer)
-
-			fmt.Printf("Message recieved from drone: %s", messageBuffer)
-		}
-	}()
+	go printMessagesFromDrone(conn)
 
 	for {
 		reader := bufio.NewReader(os.Stdin)
@@ -58,6 +51,12 @@ func main() {
 	}
 }
 
-func readFromConnection(conn *net.UDPConn) {
-	
+func printMessagesFromDrone(conn *net.UDPConn) {
+	for {
+		message := make([]byte, 256)
+
+		conn.ReadFromUDP(message)
+
+		fmt.Printf("🚁 Message from drone: %s\n>> ", message)
+	}
 }
